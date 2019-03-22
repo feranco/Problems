@@ -1,8 +1,10 @@
+//Build with the following command (requires google test library):
+//g++ -Wall -Wextra -std=c++14 MergingIntervals.cpp -L/usr/local/lib -lgtest -lgtest_main -pthread
+
 #include <set>
 #include <vector>
 #include <algorithm>
 #include <gtest/gtest.h>
-#include <iostream>
 
 using std::vector;
 using std::max;
@@ -47,23 +49,10 @@ class Meeting
   {
     mEndTime = endTime;
   }
-
-  bool operator==(const Meeting& other) const
-  {
-    return
-        mStartTime == other.startTime_
-        && mEndTime == other.endTime_;
-  }
-
-  bool operator!=(const Meeting& other) const
-  {
-    return
-        startTime_ != other.startTime_
-        || endTime_ != other.endTime_;
-  }
 };
 
-vector<Meeting> mergeRanges(const vector<Meeting>& meetings)
+//Brute force solution O(n^2) time O(n) space
+vector<Meeting> mergeRangesBruteForce(const vector<Meeting>& meetings)
 {
   vector<Meeting> mergedMeetings;
   set<size_t> processedMeetings;
@@ -93,12 +82,11 @@ vector<Meeting> mergeRanges(const vector<Meeting>& meetings)
   }
   return mergedMeetings;
 }
-#if 0
+
 vector<Meeting> mergeRanges(const vector<Meeting>& meetings)
 {
   if (meetings.size() == 0) return {};
 
-  // merge meeting ranges
   vector<Meeting> sortedByStartTime(meetings.begin(), meetings.end());
   sort(sortedByStartTime.begin(), sortedByStartTime.end(), [](const Meeting& a, const Meeting&b){
                                                              return a.getStartTime() < b.getStartTime();
@@ -116,15 +104,10 @@ vector<Meeting> mergeRanges(const vector<Meeting>& meetings)
       mergedMeetings.push_back(meeting);
     }
   }
-
-
+ 
   return mergedMeetings;
 }
-#endif
 
-
-
-// tests1,3 2,4
 TEST(MergeMeetingsTest, MeetingsOverlap) {
   const auto meetings = vector<Meeting> {Meeting(1, 3), Meeting(2, 4)};
   const auto actual = mergeRanges(meetings);
