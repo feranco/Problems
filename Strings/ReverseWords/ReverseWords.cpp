@@ -8,6 +8,33 @@
 using std::swap;
 using std::string;
 
+//O(n) time, O(n) space solution
+string reverseWordsAuxSpace(const string& message)
+{
+    if (message.empty()) return;
+    size_t strSize = message.size();
+    string result(strSize, ' ');
+
+    // message[i..j] forms a word
+    size_t i = 0, j = message.find_first_of(' ', i);
+
+    while (j != string::npos) {
+        for (size_t k = i; k < j; ++k) {
+            // result[strSize-j] is the start of the word in the reversed string
+            result[strSize - j + k - i] = message[k];
+        }
+        i = j+1;
+        j = message.find_first_of(' ', i);
+    }
+
+    //the start of the word in the reversed string is 0
+    for (size_t k = i; k < strSize; ++k) result[k - i] = message[k];
+
+    return result;
+}
+
+
+// O(n) time, O(1) space solution
 void reverseString(string& message, size_t start, size_t end){
     while (start < end) swap(message[start++], message[end--]);
 }
@@ -18,6 +45,7 @@ void reverseWords(string& message)
 
     reverseString(message, 0, message.size()-1);
 
+    // message[i..j] forms a word
     size_t i = 0, j = message.find_first_of(' ', i);
 
     while (j != string::npos) {
